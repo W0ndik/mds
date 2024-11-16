@@ -1,0 +1,12 @@
+Entry 1:
+Determinant: -1.0000000000000044
+Rank: 3
+Inverse matrix:
+[[  1.  -1.   1.]
+ [-38.  41. -34.]
+ [ 27. -29.  24.]]
+
+
+Entry 2:
+Unique solution: [ 4.  0. -1.]
+
