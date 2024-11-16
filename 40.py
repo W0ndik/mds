@@ -1,6 +1,5 @@
 import numpy as np
 
-# Заданные параметры задачи
 A = np.array([
     [4, -1, 0, -1, 0, -1],
     [-1, 4, -1, 0, -1, 0],
@@ -9,37 +8,28 @@ A = np.array([
     [0, -1, 0, -1, 4, -1],
     [0, 0, -1, 0, -1, 4]
 ], dtype=float)
+b = np.array([0, 5, 0, 6, -2, 6])
 
-b = np.array([0, 5, 0, 6, -2, 6], dtype=float)
-y0 = np.zeros(6)  # начальная точка
-epsilon = 1e-6  # точность
+def manual_norm(vector):
+    return np.sqrt(sum(v**2 for v in vector))
 
-# Функция для вычисления градиента
-def gradient(y):
-    return 2 * A @ y - 2 * b
+y = np.zeros(6)
 
-# Метод скорейшего спуска
-def steepest_descent(A, b, y0, epsilon):
-    y = y0
-    grad = gradient(y)
-    iterations = 0
-    while np.linalg.norm(grad) > epsilon:
-        # Оптимальный шаг
-        alpha = np.dot(grad, grad) / (2 * np.dot(grad, A @ grad))
-        # Обновляем точку
-        y = y - alpha * grad
-        # Пересчитываем градиент
-        grad = gradient(y)
-        iterations += 1
-    return y, iterations
+tolerance = 1e-6
+max_iterations = 1000
+iteration = 0
 
-# Поиск минимума
-y_min, num_iterations = steepest_descent(A, b, y0, epsilon)
+while True:
+    grad = 2 * A @ y - 2 * b
+    grad_norm = manual_norm(grad)
+    
+    if grad_norm < tolerance or iteration >= max_iterations:
+        break
+    
+    grad_A_grad = sum(g1 * sum(A[i][j] * g2 for j, g2 in enumerate(grad)) for i, g1 in enumerate(grad))
+    alpha = grad_norm**2 / (2 * grad_A_grad)
+    y = [yi - alpha * gi for yi, gi in zip(y, grad)]
+    iteration += 1
 
-# Вычисление нормы ||X*||_2
-norm_result = np.linalg.norm(y_min)
-y_min, norm_result
-
-print(norm_result)
-
-# Вопросы?
+extremum_norm = manual_norm(y)
+print(extremum_norm)
